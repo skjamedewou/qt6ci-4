@@ -1,5 +1,7 @@
 #include <QCoreApplication>
 #include "test.h"
+#include <QScopedPointer>
+#include <QSharedPointer>
 
 Test* makeTree()
 {
@@ -41,6 +43,31 @@ void printTree(Test* root, int level =0)
         printTree(child, level +1);
     }
 }
+
+void testScPointer()
+{
+    QScopedPointer<Test> sp(new Test());
+    sp->setObjectName("My Test");
+
+    qInfo()<<"Scope Pointer "<< &sp;
+    qInfo()<<"Pointer Data"<< sp.data();
+    qInfo()<<sp->objectName();
+}
+
+QSharedPointer<Test> getObject(QString name)
+{
+    QSharedPointer<Test> sp(new Test());
+    sp->setObjectName(name);
+
+    return sp;
+}
+
+void doWork(QSharedPointer<Test> sp)
+{
+    qInfo()<<"Shared Pointer "<< &sp;
+    qInfo()<<"Work"<< sp.data();
+}
+
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
@@ -56,9 +83,11 @@ int main(int argc, char *argv[])
     // If you do not need a running Qt event loop, remove the call
     // to a.exec() or use the Non-Qt Plain C++ Application template.
 
-    Test* tree = makeTree();
-    printTree(tree, 1);
-    delete tree;
+    //Test* tree = makeTree();
+    //printTree(tree, 1);
+    //delete tree;
+
+    testScPointer();
 
     return a.exec();
 }
